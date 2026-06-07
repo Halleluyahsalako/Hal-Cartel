@@ -1,0 +1,17 @@
+/* Cartel — admin styles: progressive disclosure + extensions shell. */
+.hal-cartel-advanced-field--hidden { display: none; }
+
+.hal-cartel-extensions-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1rem;
+  margin-top: 1rem;
+}
+.hal-cartel-extension-card {
+  background: #fff;
+  border: 1px solid #ccd0d4;
+  border-radius: 4px;
+  padding: 1rem 1.25rem;
+}
+.hal-cartel-extension-card h2 { margin-top: 0; }
+.hal-cartel-extension-settings { margin-top: .5rem; border-top: 1px solid #eee; padding-top: .5rem; }

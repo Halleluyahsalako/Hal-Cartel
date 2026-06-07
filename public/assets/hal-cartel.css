@@ -1,0 +1,11 @@
+/* Cartel — minimal public styles. Theme overrides welcome. */
+.hal-cartel-product{border:1px solid #111;padding:1rem;display:grid;gap:.5rem;font-family:inherit}
+.hal-cartel-product__title{margin:0;font-weight:800}
+.hal-cartel-product__price{font-variant-numeric:tabular-nums}
+.hal-cartel-add-to-cart,.hal-cartel-buy-now,.hal-cartel-buy-now-inline,.hal-cartel-place-order{
+  background:#111;color:#fff;border:0;padding:.65rem 1rem;cursor:pointer;font-weight:700;letter-spacing:.02em
+}
+.hal-cartel-buy-now,.hal-cartel-buy-now-inline{background:#facc15;color:#111}
+.hal-cartel-checkout__grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1.5rem}
+@media (max-width:800px){.hal-cartel-checkout__grid{grid-template-columns:1fr}}
+.hal-cartel-checkout input{display:block;width:100%;padding:.6rem;border:1px solid #111;margin:.25rem 0}
