@@ -29,16 +29,34 @@ class Hal_Cartel_Admin {
 		add_submenu_page( 'hal-cartel', 'Settings', 'Settings', 'manage_options', 'hal-cartel-settings', array( __CLASS__, 'settings_page' ) );
 	}
 
-	/**
-	 * wp.media (the image picker) is only needed on the product editor screen —
-	 * loading it everywhere would add unnecessary weight to every admin page.
-	 */
 	public static function enqueue_product_editor_assets( $hook ) {
 		$screen = get_current_screen();
-		if ( ! $screen || Hal_Cartel_Product::POST_TYPE !== $screen->post_type ) {
-			return;
+		$on_product = $screen && Hal_Cartel_Product::POST_TYPE === $screen->post_type;
+		$on_settings = $screen && 'cartel_page_hal-cartel-settings' === $screen->id;
+		if ( $on_product || $on_settings ) {
+			wp_enqueue_media();
 		}
-		wp_enqueue_media();
+		if ( $on_settings ) {
+			wp_add_inline_script( 'jquery-core', self::logo_picker_js() );
+		}
+	}
+
+	private static function logo_picker_js(): string {
+		return <<<'JS'
+jQuery(function($){
+  var frame;
+  $('#hal_cartel_pick_email_logo').on('click', function(e){
+    e.preventDefault();
+    if (frame) { frame.open(); return; }
+    frame = wp.media({ title: 'Choose email logo', button: { text: 'Use this image' }, multiple: false });
+    frame.on('select', function(){
+      var att = frame.state().get('selection').first().toJSON();
+      $('#hal_cartel_email_logo_url').val(att.url);
+    });
+    frame.open();
+  });
+});
+JS;
 	}
 
 	public static function register_settings() {
@@ -52,6 +70,11 @@ class Hal_Cartel_Admin {
 		register_setting( 'hal_cartel', 'hal_cartel_shipping_provider' ); // e.g. easypost, shippo
 		register_setting( 'hal_cartel', 'hal_cartel_shipping_api_key' );
 		register_setting( 'hal_cartel', 'hal_cartel_email_admin_address', array( 'sanitize_callback' => 'sanitize_email' ) );
+		register_setting( 'hal_cartel', 'hal_cartel_email_from_name', array( 'sanitize_callback' => 'sanitize_text_field' ) );
+		register_setting( 'hal_cartel', 'hal_cartel_email_from_email', array( 'sanitize_callback' => 'sanitize_email' ) );
+		register_setting( 'hal_cartel', 'hal_cartel_email_logo_url', array( 'sanitize_callback' => 'esc_url_raw' ) );
+		register_setting( 'hal_cartel', 'hal_cartel_email_brand_color', array( 'sanitize_callback' => 'sanitize_hex_color' ) );
+		register_setting( 'hal_cartel', 'hal_cartel_email_footer_text', array( 'sanitize_callback' => 'sanitize_textarea_field' ) );
 		register_setting( 'hal_cartel', 'hal_cartel_email_order_received_enabled' );
 		register_setting( 'hal_cartel', 'hal_cartel_email_new_order_alert_enabled' );
 		register_setting( 'hal_cartel', 'hal_cartel_email_status_update_enabled' );
@@ -352,6 +375,47 @@ class Hal_Cartel_Admin {
 
 				<h2><?php esc_html_e( 'Emails', 'cartel' ); ?></h2>
 				<table class="form-table">
+					<tr>
+						<th><?php esc_html_e( 'Sender name', 'cartel' ); ?></th>
+						<td>
+							<input type="text" name="hal_cartel_email_from_name" value="<?php echo esc_attr( get_option( 'hal_cartel_email_from_name' ) ); ?>" class="regular-text" placeholder="<?php echo esc_attr( get_bloginfo( 'name' ) ); ?>" />
+							<p class="description"><?php esc_html_e( 'The name your customers see in their inbox. Leave blank to use the site name.', 'cartel' ); ?></p>
+						</td>
+					</tr>
+					<tr>
+						<th><?php esc_html_e( 'Sender email', 'cartel' ); ?></th>
+						<td>
+							<input type="email" name="hal_cartel_email_from_email" value="<?php echo esc_attr( get_option( 'hal_cartel_email_from_email' ) ); ?>" class="regular-text" placeholder="<?php echo esc_attr( get_option( 'admin_email' ) ); ?>" />
+							<p class="description"><?php esc_html_e( 'The "From" address on all outgoing emails. Leave blank to use the site admin email.', 'cartel' ); ?></p>
+						</td>
+					</tr>
+					<tr>
+						<th><?php esc_html_e( 'Logo', 'cartel' ); ?></th>
+						<td>
+							<div style="display:flex;align-items:center;gap:10px;">
+								<input type="url" name="hal_cartel_email_logo_url" id="hal_cartel_email_logo_url" value="<?php echo esc_attr( get_option( 'hal_cartel_email_logo_url' ) ); ?>" class="regular-text" placeholder="https://…" />
+								<button type="button" class="button" id="hal_cartel_pick_email_logo"><?php esc_html_e( 'Choose image', 'cartel' ); ?></button>
+							</div>
+							<?php if ( get_option( 'hal_cartel_email_logo_url' ) ) : ?>
+								<p><img src="<?php echo esc_url( get_option( 'hal_cartel_email_logo_url' ) ); ?>" style="max-height:60px;margin-top:8px;" /></p>
+							<?php endif; ?>
+							<p class="description"><?php esc_html_e( 'Appears at the top of every email. Recommended width: 200–300px.', 'cartel' ); ?></p>
+						</td>
+					</tr>
+					<tr>
+						<th><?php esc_html_e( 'Brand color', 'cartel' ); ?></th>
+						<td>
+							<input type="color" name="hal_cartel_email_brand_color" value="<?php echo esc_attr( get_option( 'hal_cartel_email_brand_color', '#1a1a2e' ) ); ?>" />
+							<p class="description"><?php esc_html_e( 'Used as the email header background and button color.', 'cartel' ); ?></p>
+						</td>
+					</tr>
+					<tr>
+						<th><?php esc_html_e( 'Footer text', 'cartel' ); ?></th>
+						<td>
+							<textarea name="hal_cartel_email_footer_text" class="large-text" rows="3"><?php echo esc_textarea( get_option( 'hal_cartel_email_footer_text' ) ); ?></textarea>
+							<p class="description"><?php esc_html_e( 'Appears at the bottom of every email. E.g. your address, unsubscribe note, or copyright line.', 'cartel' ); ?></p>
+						</td>
+					</tr>
 					<tr>
 						<th><?php esc_html_e( 'New-order alerts go to', 'cartel' ); ?></th>
 						<td>

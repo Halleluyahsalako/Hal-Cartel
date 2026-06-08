@@ -87,9 +87,62 @@ class Hal_Cartel_Emails {
 		}, $template );
 	}
 
-	/** Plain-text email — keeps the renderer free of HTML-escaping concerns around merchant-filtered templates and download links. */
 	protected static function send( $to, string $subject, string $body ) {
-		wp_mail( $to, $subject, $body );
+		$from_name  = get_option( 'hal_cartel_email_from_name' ) ?: get_bloginfo( 'name' );
+		$from_email = get_option( 'hal_cartel_email_from_email' ) ?: get_option( 'admin_email' );
+
+		$headers = array(
+			'Content-Type: text/html; charset=UTF-8',
+			sprintf( 'From: %s <%s>', $from_name, $from_email ),
+		);
+
+		wp_mail( $to, $subject, self::wrap_html( $body ), $headers );
+	}
+
+	/** Wraps plain-text email body in a branded, inbox-safe HTML template. */
+	protected static function wrap_html( string $body ): string {
+		$brand_color = get_option( 'hal_cartel_email_brand_color', '#1a1a2e' );
+		$logo_url    = get_option( 'hal_cartel_email_logo_url' );
+		$footer_text = get_option( 'hal_cartel_email_footer_text' );
+		$site_name   = wp_specialchars_decode( get_bloginfo( 'name' ), ENT_QUOTES );
+		$site_url    = home_url( '/' );
+
+		$logo_html = $logo_url
+			? '<img src="' . esc_url( $logo_url ) . '" alt="' . esc_attr( $site_name ) . '" style="max-height:60px;max-width:260px;display:block;" />'
+			: '<span style="font-size:22px;font-weight:700;color:#ffffff;letter-spacing:-0.5px;">' . esc_html( $site_name ) . '</span>';
+
+		$body_html = nl2br( esc_html( $body ) );
+
+		$footer_html = $footer_text
+			? '<p style="margin:0 0 6px;">' . nl2br( esc_html( $footer_text ) ) . '</p>'
+			: '';
+
+		return '<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>' . esc_html( $site_name ) . '</title></head>
+<body style="margin:0;padding:0;background:#f4f5f7;font-family:-apple-system,BlinkMacSystemFont,\'Segoe UI\',Helvetica,Arial,sans-serif;">
+  <table width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#f4f5f7;padding:32px 16px;">
+    <tr><td align="center">
+      <table width="600" cellpadding="0" cellspacing="0" border="0" style="max-width:600px;width:100%;background:#ffffff;border-radius:8px;overflow:hidden;box-shadow:0 1px 4px rgba(0,0,0,.08);">
+
+        <tr><td style="background:' . esc_attr( $brand_color ) . ';padding:28px 40px;">
+          <a href="' . esc_url( $site_url ) . '" style="text-decoration:none;">' . $logo_html . '</a>
+        </td></tr>
+
+        <tr><td style="padding:36px 40px;color:#1a1a2e;font-size:15px;line-height:1.7;">
+          ' . $body_html . '
+        </td></tr>
+
+        <tr><td style="background:#f8f9fa;padding:20px 40px;border-top:1px solid #e8e9eb;color:#888;font-size:12px;line-height:1.6;text-align:center;">
+          ' . $footer_html . '
+          <p style="margin:0;"><a href="' . esc_url( $site_url ) . '" style="color:#888;text-decoration:none;">' . esc_html( $site_name ) . '</a></p>
+        </td></tr>
+
+      </table>
+    </td></tr>
+  </table>
+</body>
+</html>';
 	}
 
 	/** Customer-facing "we received your order" email, sent right after checkout. */
