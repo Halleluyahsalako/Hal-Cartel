@@ -1,5 +1,80 @@
-/* Cartel — admin styles: progressive disclosure + extensions shell. */
-.hal-cartel-advanced-field--hidden { display: none; }
+/* Cartel — admin styles. Color system: "Indigo & Slate" — calm, trustworthy, easy on the eyes. */
+:root {
+  --hal-cartel-accent:       #4F46E5;
+  --hal-cartel-accent-hover: #4338CA;
+  --hal-cartel-accent-soft:  #EEF2FF;
+  --hal-cartel-surface:      #FFFFFF;
+  --hal-cartel-backdrop:     #F8FAFC;
+  --hal-cartel-border:       #E2E8F0;
+  --hal-cartel-text:         #1E293B;
+  --hal-cartel-muted:        #64748B;
+  --hal-cartel-success:      #16A34A;
+  --hal-cartel-success-soft: #F0FDF4;
+  --hal-cartel-warning:      #D97706;
+  --hal-cartel-warning-soft: #FFFBEB;
+  --hal-cartel-danger:       #DC2626;
+  --hal-cartel-danger-soft:  #FEF2F2;
+  --hal-cartel-radius:       6px;
+  --hal-cartel-shadow:       0 1px 2px rgba(30, 41, 59, .06), 0 1px 3px rgba(30, 41, 59, .08);
+}
+
+/* Page shell — wraps every Cartel admin screen (dashboard/orders/IO/settings/shortcodes). */
+.hal-cartel-admin-wrap {
+  max-width: 1100px;
+}
+.hal-cartel-admin-wrap h1.hal-cartel-admin-title {
+  display: flex;
+  align-items: center;
+  gap: .6rem;
+  color: var( --hal-cartel-text );
+}
+.hal-cartel-admin-wrap h1.hal-cartel-admin-title .dashicons {
+  color: var( --hal-cartel-accent );
+  font-size: 1.5rem;
+  width: 1.5rem;
+  height: 1.5rem;
+}
+.hal-cartel-admin-wrap .hal-cartel-lede {
+  color: var( --hal-cartel-muted );
+  font-size: 14px;
+  max-width: 60em;
+}
+.hal-cartel-admin-wrap h2 { color: var( --hal-cartel-text ); }
+
+/* Buttons — recolor primary actions to the brand accent on Cartel screens only. */
+.hal-cartel-admin-wrap .button-primary,
+.hal-cartel-product-data .button-primary {
+  background: var( --hal-cartel-accent );
+  border-color: var( --hal-cartel-accent-hover );
+  box-shadow: none;
+  text-shadow: none;
+}
+.hal-cartel-admin-wrap .button-primary:hover,
+.hal-cartel-admin-wrap .button-primary:focus,
+.hal-cartel-product-data .button-primary:hover,
+.hal-cartel-product-data .button-primary:focus {
+  background: var( --hal-cartel-accent-hover );
+  border-color: var( --hal-cartel-accent-hover );
+}
+.hal-cartel-admin-wrap .button:not(.button-primary):hover,
+.hal-cartel-product-data .button:not(.button-primary):hover {
+  border-color: var( --hal-cartel-accent );
+  color: var( --hal-cartel-accent-hover );
+}
+
+/* Cards — generic surfaced container used across dashboard / extensions / shortcode reference. */
+.hal-cartel-card,
+.hal-cartel-extension-card,
+.hal-cartel-shortcode-ref__item {
+  background: var( --hal-cartel-surface );
+  border: 1px solid var( --hal-cartel-border );
+  border-radius: var( --hal-cartel-radius );
+  box-shadow: var( --hal-cartel-shadow );
+  padding: 1rem 1.25rem;
+}
+.hal-cartel-extension-card h2,
+.hal-cartel-shortcode-ref__item h2 { margin-top: 0; color: var( --hal-cartel-text ); }
+.hal-cartel-extension-settings { margin-top: .5rem; border-top: 1px solid var( --hal-cartel-border ); padding-top: .5rem; }
 
 .hal-cartel-extensions-grid {
   display: grid;
@@ -7,11 +82,245 @@
   gap: 1rem;
   margin-top: 1rem;
 }
-.hal-cartel-extension-card {
-  background: #fff;
-  border: 1px solid #ccd0d4;
-  border-radius: 4px;
-  padding: 1rem 1.25rem;
+
+/* Badges — small status/type pills (stock state, product type, order status, etc.) */
+.hal-cartel-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: .3em;
+  padding: .15em .65em;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1.8;
+  white-space: nowrap;
 }
-.hal-cartel-extension-card h2 { margin-top: 0; }
-.hal-cartel-extension-settings { margin-top: .5rem; border-top: 1px solid #eee; padding-top: .5rem; }
+.hal-cartel-badge--neutral  { background: var( --hal-cartel-accent-soft );  color: var( --hal-cartel-accent-hover ); }
+.hal-cartel-badge--success  { background: var( --hal-cartel-success-soft ); color: var( --hal-cartel-success ); }
+.hal-cartel-badge--warning  { background: var( --hal-cartel-warning-soft ); color: var( --hal-cartel-warning ); }
+.hal-cartel-badge--danger   { background: var( --hal-cartel-danger-soft );  color: var( --hal-cartel-danger ); }
+
+/* Tables — orders list, variations grid, etc. */
+.hal-cartel-admin-wrap table.widefat {
+  border-color: var( --hal-cartel-border );
+  box-shadow: var( --hal-cartel-shadow );
+}
+.hal-cartel-admin-wrap table.widefat thead th {
+  color: var( --hal-cartel-text );
+}
+.hal-cartel-admin-wrap table.widefat tbody tr:hover {
+  background: var( --hal-cartel-accent-soft );
+}
+
+/* Progressive disclosure (Simple/Advanced mode) */
+.hal-cartel-advanced-field--hidden { display: none; }
+
+/* Product data — tabbed panel (mirrors WooCommerce's "Product data" box, in our palette) */
+.hal-cartel-product-data {
+  background: var( --hal-cartel-surface );
+  border: 1px solid var( --hal-cartel-border );
+  border-radius: var( --hal-cartel-radius );
+  overflow: hidden;
+}
+.hal-cartel-product-data__type-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: .75rem 1.5rem;
+  padding: .85rem 1.1rem;
+  background: var( --hal-cartel-backdrop );
+  border-bottom: 1px solid var( --hal-cartel-border );
+}
+.hal-cartel-product-data__type-bar label { font-weight: 600; color: var( --hal-cartel-text ); }
+.hal-cartel-product-data__type-bar select { border-color: var( --hal-cartel-border ); }
+.hal-cartel-product-data__type-bar .hal-cartel-flag-label {
+  display: inline-flex;
+  align-items: center;
+  gap: .4em;
+  font-weight: 400;
+  color: var( --hal-cartel-text );
+}
+
+.hal-cartel-product-data__tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0;
+  margin: 0;
+  padding: 0 1.1rem;
+  background: var( --hal-cartel-backdrop );
+  border-bottom: 1px solid var( --hal-cartel-border );
+}
+.hal-cartel-product-data__tabs li { margin: 0; }
+.hal-cartel-product-data__tabs a {
+  display: inline-block;
+  padding: .65rem 1rem;
+  border: 1px solid transparent;
+  border-bottom: none;
+  border-radius: var( --hal-cartel-radius ) var( --hal-cartel-radius ) 0 0;
+  text-decoration: none;
+  color: var( --hal-cartel-muted );
+  font-weight: 500;
+}
+.hal-cartel-product-data__tabs a:hover { color: var( --hal-cartel-accent-hover ); }
+.hal-cartel-product-data__tab--active a {
+  background: var( --hal-cartel-surface );
+  border-color: var( --hal-cartel-border );
+  color: var( --hal-cartel-accent );
+  font-weight: 600;
+  position: relative;
+  top: 1px;
+}
+.hal-cartel-product-data__panel { padding: 1.25rem; }
+.hal-cartel-product-data__panel p:first-child { margin-top: 0; }
+.hal-cartel-product-data__panel .description { color: var( --hal-cartel-muted ); }
+
+/* Image gallery picker */
+.hal-cartel-gallery {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .5rem;
+  margin: 0 0 .75rem;
+  padding: 0;
+  list-style: none;
+}
+.hal-cartel-gallery__item { position: relative; line-height: 0; }
+.hal-cartel-gallery__item img {
+  display: block;
+  width: 80px;
+  height: 80px;
+  object-fit: cover;
+  border: 1px solid var( --hal-cartel-border );
+  border-radius: var( --hal-cartel-radius );
+}
+.hal-cartel-gallery__remove {
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  width: 20px;
+  height: 20px;
+  line-height: 18px;
+  padding: 0;
+  border: 1px solid var( --hal-cartel-border );
+  border-radius: 50%;
+  background: var( --hal-cartel-surface );
+  color: var( --hal-cartel-danger );
+  cursor: pointer;
+  font-size: 14px;
+}
+.hal-cartel-gallery__remove:hover { background: var( --hal-cartel-danger-soft ); }
+
+/* Copy-to-clipboard rows (shortcode tab + Shortcodes reference page) */
+.hal-cartel-copy-row { display: flex; gap: .5rem; align-items: center; }
+.hal-cartel-copy-row .hal-cartel-copy-source {
+  font-family: Consolas, Monaco, monospace;
+  background: var( --hal-cartel-backdrop );
+  border-color: var( --hal-cartel-border );
+  color: var( --hal-cartel-text );
+}
+.hal-cartel-copy-btn {
+  background: var( --hal-cartel-accent );
+  border-color: var( --hal-cartel-accent-hover );
+  color: #fff;
+}
+.hal-cartel-copy-btn:hover { background: var( --hal-cartel-accent-hover ); color: #fff; }
+.hal-cartel-copy-btn[data-copied] { background: var( --hal-cartel-success ); border-color: var( --hal-cartel-success ); }
+.hal-cartel-copy-btn[data-copied]::after { content: "\2713"; margin-left: .35rem; }
+
+.hal-cartel-shortcode-ref { display: grid; gap: 1rem; margin-top: 1rem; max-width: 720px; }
+.hal-cartel-shortcode-ref__item h2 code {
+  background: var( --hal-cartel-accent-soft );
+  color: var( --hal-cartel-accent-hover );
+  padding: .1em .4em;
+  border-radius: 4px;
+}
+
+/* Attributes tab — repeatable rows of name + pipe-separated values */
+.hal-cartel-attributes { display: flex; flex-direction: column; gap: .75rem; margin-bottom: 1rem; }
+.hal-cartel-attribute-row {
+  display: grid;
+  grid-template-columns: 1fr 2fr auto auto;
+  gap: .75rem;
+  align-items: center;
+  padding: .85rem;
+  background: var( --hal-cartel-backdrop );
+  border: 1px solid var( --hal-cartel-border );
+  border-radius: var( --hal-cartel-radius );
+}
+.hal-cartel-attribute-row input[type="text"] { width: 100%; }
+.hal-cartel-attribute-row .hal-cartel-flag-label { white-space: nowrap; font-weight: 400; }
+.hal-cartel-attribute-remove {
+  border: 1px solid var( --hal-cartel-border );
+  background: var( --hal-cartel-surface );
+  color: var( --hal-cartel-danger );
+  border-radius: var( --hal-cartel-radius );
+  cursor: pointer;
+  padding: .35rem .6rem;
+  line-height: 1;
+}
+.hal-cartel-attribute-remove:hover { background: var( --hal-cartel-danger-soft ); }
+
+/* Variations tab — generated grid of variation rows */
+.hal-cartel-variations-empty {
+  padding: 1.5rem;
+  text-align: center;
+  color: var( --hal-cartel-muted );
+  background: var( --hal-cartel-backdrop );
+  border: 1px dashed var( --hal-cartel-border );
+  border-radius: var( --hal-cartel-radius );
+}
+.hal-cartel-variations { display: flex; flex-direction: column; gap: .75rem; }
+.hal-cartel-variation {
+  border: 1px solid var( --hal-cartel-border );
+  border-radius: var( --hal-cartel-radius );
+  background: var( --hal-cartel-surface );
+}
+.hal-cartel-variation__head {
+  display: flex;
+  align-items: center;
+  gap: .75rem;
+  padding: .65rem .9rem;
+  background: var( --hal-cartel-backdrop );
+  border-bottom: 1px solid var( --hal-cartel-border );
+  border-radius: var( --hal-cartel-radius ) var( --hal-cartel-radius ) 0 0;
+  font-weight: 600;
+  color: var( --hal-cartel-text );
+}
+.hal-cartel-variation__head .hal-cartel-badge { font-weight: 600; }
+.hal-cartel-variation__body {
+  display: grid;
+  grid-template-columns: 90px repeat(auto-fit, minmax(120px, 1fr));
+  gap: 1rem;
+  align-items: start;
+  padding: 1rem;
+}
+.hal-cartel-variation__image {
+  width: 80px;
+  height: 80px;
+  border: 1px dashed var( --hal-cartel-border );
+  border-radius: var( --hal-cartel-radius );
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  overflow: hidden;
+  color: var( --hal-cartel-muted );
+  background: var( --hal-cartel-backdrop );
+  font-size: 11px;
+  text-align: center;
+  line-height: 1.3;
+}
+.hal-cartel-variation__image img { display: block; width: 100%; height: 100%; object-fit: cover; }
+.hal-cartel-variation__body label { display: block; font-size: 12px; color: var( --hal-cartel-muted ); margin-bottom: .25rem; }
+.hal-cartel-variation__body input[type="text"],
+.hal-cartel-variation__body input[type="number"] { width: 100%; }
+.hal-cartel-variation__remove {
+  margin-left: auto;
+  border: 1px solid var( --hal-cartel-border );
+  background: var( --hal-cartel-surface );
+  color: var( --hal-cartel-danger );
+  border-radius: var( --hal-cartel-radius );
+  cursor: pointer;
+  padding: .3rem .6rem;
+  line-height: 1;
+}
+.hal-cartel-variation__remove:hover { background: var( --hal-cartel-danger-soft ); }

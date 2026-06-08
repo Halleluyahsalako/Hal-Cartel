@@ -6,6 +6,36 @@
   background:#111;color:#fff;border:0;padding:.65rem 1rem;cursor:pointer;font-weight:700;letter-spacing:.02em
 }
 .hal-cartel-buy-now,.hal-cartel-buy-now-inline{background:#facc15;color:#111}
+.hal-cartel-add-to-cart:disabled,.hal-cartel-buy-now:disabled{opacity:.5;cursor:not-allowed}
+.hal-cartel-external-link{display:inline-block;text-decoration:none;text-align:center}
+.hal-cartel-product__attributes{display:grid;gap:.5rem}
+.hal-cartel-product__attribute{display:grid;gap:.25rem;font-weight:600}
+.hal-cartel-product__attribute select{padding:.5rem;border:1px solid #111;font:inherit}
+.hal-cartel-product__availability{margin:0;font-weight:700}
+.hal-cartel-product__availability--out{color:#b91c1c}
+.hal-cartel-product__group-list{list-style:none;margin:0;padding:0;display:grid;gap:.5rem}
+.hal-cartel-product__group-item{display:flex;align-items:center;gap:.75rem;border:1px solid #111;padding:.65rem .75rem}
+.hal-cartel-product__group-name{flex:1;font-weight:700}
+.hal-cartel-product__group-price{font-variant-numeric:tabular-nums}
 .hal-cartel-checkout__grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1.5rem}
 @media (max-width:800px){.hal-cartel-checkout__grid{grid-template-columns:1fr}}
-.hal-cartel-checkout input{display:block;width:100%;padding:.6rem;border:1px solid #111;margin:.25rem 0}
+.hal-cartel-checkout input,.hal-cartel-checkout select{display:block;width:100%;padding:.6rem;border:1px solid #111;margin:.25rem 0}
+.hal-cartel-checkout__shipping-rates{margin:.5rem 0 1rem}
+.hal-cartel-checkout__shipping-hint{opacity:.7;font-size:.9em}
+.hal-cartel-checkout__shipping-rate{display:flex;align-items:center;gap:.6rem;padding:.5rem;border:1px solid #111;margin:.25rem 0;cursor:pointer}
+.hal-cartel-checkout__shipping-rate span:first-of-type{flex:1}
+.hal-cartel-checkout__payment-method{display:flex;align-items:center;gap:.6rem;padding:.5rem;border:1px solid #111;margin:.25rem 0;cursor:pointer}
+.hal-cartel-checkout__payment-fields{padding:.25rem .5rem .75rem 2rem}
+.hal-cartel-checkout__payment-instructions{white-space:pre-line;opacity:.85}
+.hal-cartel-checkout__card-element{padding:.75rem;border:1px solid #111;background:#fff}
+.hal-cartel-checkout__opt-in{display:flex;align-items:center;gap:.5rem;margin:.75rem 0;font-weight:600;cursor:pointer}
+.hal-cartel-checkout__opt-in input{display:inline-block;width:auto;margin:0}
+.hal-cartel-order-lookup{border:1px solid #111;padding:1rem;display:grid;gap:.5rem;max-width:28rem;margin-bottom:1.5rem}
+.hal-cartel-order-lookup input{display:block;width:100%;padding:.6rem;border:1px solid #111;margin:.25rem 0}
+.hal-cartel-my-orders__error{color:#b91c1c;font-weight:700}
+.hal-cartel-my-orders__list{list-style:none;margin:0;padding:0;display:grid;gap:.75rem}
+.hal-cartel-my-orders__order{border:1px solid #111;padding:.85rem 1rem}
+.hal-cartel-my-orders__order-head{display:flex;flex-wrap:wrap;align-items:center;gap:1rem;font-weight:700}
+.hal-cartel-my-orders__date,.hal-cartel-my-orders__status{font-weight:400;opacity:.8}
+.hal-cartel-my-orders__total{margin-left:auto;font-variant-numeric:tabular-nums}
+.hal-cartel-my-orders__downloads{list-style:none;margin:.6rem 0 0;padding:0;display:grid;gap:.25rem}

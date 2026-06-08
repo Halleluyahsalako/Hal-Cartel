@@ -27,6 +27,11 @@ class Hal_Cartel_UI {
 	public static function mode( $user_id = 0 ): string {
 		$user_id = $user_id ? $user_id : get_current_user_id();
 		$mode    = get_user_meta( $user_id, self::META_KEY, true );
+
+		if ( '' === $mode ) {
+			$mode = get_option( 'hal_cartel_default_ui_mode', 'simple' );
+		}
+
 		return 'advanced' === $mode ? 'advanced' : 'simple';
 	}
 
@@ -91,7 +96,36 @@ class Hal_Cartel_UI {
 	public static function enqueue() {
 		wp_register_style( 'hal-cartel-admin', HAL_CARTEL_PLUGIN_URL . 'admin/assets/hal-cartel-admin.css', array(), HAL_CARTEL_VERSION );
 		wp_register_script( 'hal-cartel-admin', HAL_CARTEL_PLUGIN_URL . 'admin/assets/hal-cartel-admin.js', array(), HAL_CARTEL_VERSION, true );
-		wp_localize_script( 'hal-cartel-admin', 'HalCartelUIData', array( 'mode' => self::mode() ) );
+		wp_localize_script( 'hal-cartel-admin', 'HalCartelUIData', array(
+			'mode'                  => self::mode(),
+			'copiedLabel'           => __( 'Copied', 'cartel' ),
+			'removeImageLabel'      => __( 'Remove image', 'cartel' ),
+			'galleryTitle'          => __( 'Select images', 'cartel' ),
+			'galleryButton'         => __( 'Add to gallery', 'cartel' ),
+			'attrNamePlaceholder'   => __( 'e.g. Color', 'cartel' ),
+			'attrValuesPlaceholder' => __( 'Red | Blue | Green', 'cartel' ),
+			'usedForVariations'     => __( 'Used for variations', 'cartel' ),
+			'removeAttributeLabel'  => __( 'Remove attribute', 'cartel' ),
+			'removeVariationLabel'  => __( 'Remove variation', 'cartel' ),
+			'enabledLabel'          => __( 'Enabled', 'cartel' ),
+			'setImageLabel'         => __( 'Set image', 'cartel' ),
+			'changeImageLabel'      => __( 'Change image', 'cartel' ),
+			'noAttributesLabel'     => __( '(no attributes selected)', 'cartel' ),
+			'variationImageTitle'   => __( 'Select a variation image', 'cartel' ),
+			'variationImageButton'  => __( 'Use image', 'cartel' ),
+			'chooseFileLabel'       => __( 'Choose file', 'cartel' ),
+			'changeFileLabel'       => __( 'Change file', 'cartel' ),
+			'noFileSelectedLabel'   => __( 'No file selected', 'cartel' ),
+			'downloadFileTitle'     => __( 'Select a downloadable file', 'cartel' ),
+			'downloadFileButton'    => __( 'Use file', 'cartel' ),
+			'noVariationsLabel'     => __( 'No variations yet. Mark at least one attribute "Used for variations" and click Generate above.', 'cartel' ),
+			'noAttributesForGen'    => __( 'Mark at least one attribute as "Used for variations" first, then click Generate again.', 'cartel' ),
+			'removeZoneLabel'       => __( 'Remove zone', 'cartel' ),
+			'removeMethodLabel'     => __( 'Remove shipping method', 'cartel' ),
+			'removeBracketLabel'    => __( 'Remove bracket', 'cartel' ),
+			'weightBracketUpTo'     => __( 'Up to', 'cartel' ),
+			'weightBracketCost'     => __( 'Cost', 'cartel' ),
+		) );
 		wp_enqueue_style( 'hal-cartel-admin' );
 		wp_enqueue_script( 'hal-cartel-admin' );
 	}
