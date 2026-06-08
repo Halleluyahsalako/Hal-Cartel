@@ -285,12 +285,61 @@
       });
     }
 
+    function setButtonLoading(loading) {
+      if (!placeOrderBtn) return;
+      placeOrderBtn.disabled = loading;
+      placeOrderBtn.textContent = loading
+        ? label('placeOrderLoadingLabel', 'Placing order…')
+        : label('placeOrderLabel', 'Place order');
+    }
+
+    function renderConfirmation(res) {
+      var payment = res.payment || {};
+      var items   = res.items  || [];
+      var fmt     = function(n) { return formatMoney(n, { symbol: res.currency || '', position: 'before', decimals: 2 }); };
+
+      var itemRows = items.map(function(i) {
+        return '<tr>' +
+          '<td style="padding:6px 0;border-bottom:1px solid #eee;">' + String(i.quantity) + ' &times; ' + String(i.name) + '</td>' +
+          '<td style="padding:6px 0;border-bottom:1px solid #eee;text-align:right;">' + fmt(i.total) + '</td>' +
+        '</tr>';
+      }).join('');
+
+      var totalsRows =
+        '<tr><td style="padding:4px 0;color:#666;">Subtotal</td><td style="padding:4px 0;text-align:right;">' + fmt(res.subtotal || 0) + '</td></tr>' +
+        (res.shipping > 0 ? '<tr><td style="padding:4px 0;color:#666;">Shipping</td><td style="padding:4px 0;text-align:right;">' + fmt(res.shipping) + '</td></tr>' : '') +
+        (res.tax > 0      ? '<tr><td style="padding:4px 0;color:#666;">Tax</td><td style="padding:4px 0;text-align:right;">' + fmt(res.tax) + '</td></tr>' : '') +
+        '<tr><td style="padding:8px 0 0;font-weight:700;">Total</td><td style="padding:8px 0 0;text-align:right;font-weight:700;">' + fmt(res.total || 0) + '</td></tr>';
+
+      var instructionsHtml = (payment.instructions)
+        ? '<div style="margin-top:20px;padding:16px;background:#f8f9fa;border-radius:6px;border-left:4px solid #1a1a2e;">' +
+            '<p style="margin:0 0 6px;font-weight:600;">Payment instructions</p>' +
+            '<p style="margin:0;white-space:pre-line;">' + String(payment.instructions).replace(/</g,'&lt;') + '</p>' +
+          '</div>'
+        : '';
+
+      var emailNote = res.email
+        ? '<p style="color:#666;font-size:14px;">A confirmation email has been sent to <strong>' + String(res.email).replace(/</g,'&lt;') + '</strong>.</p>'
+        : '';
+
+      form.innerHTML =
+        '<div class="hal-cartel-confirmation">' +
+          '<div class="hal-cartel-confirmation__icon">&#10003;</div>' +
+          '<h2 class="hal-cartel-confirmation__title">' + label('orderReceivedLabel', 'Order received!') + '</h2>' +
+          '<p class="hal-cartel-confirmation__number">Order <strong>#' + String(res.order_number) + '</strong> &mdash; ' + String(res.payment_method || '') + '</p>' +
+          emailNote +
+          '<table style="width:100%;border-collapse:collapse;margin-top:20px;">' + itemRows + totalsRows + '</table>' +
+          instructionsHtml +
+        '</div>';
+    }
+
     /* Hands the checkout response to the chosen gateway: Stripe needs an in-browser card
        confirmation step (card data never reaches our server); Manual just shows instructions. */
-    function handlePaymentResult(orderNumber, payment) {
-      payment = payment || {};
+    function handlePaymentResult(res) {
+      var payment = res.payment || {};
 
       if (payment.error) {
+        setButtonLoading(false);
         alert(payment.error);
         return;
       }
@@ -298,22 +347,17 @@
       if ('requires_confirmation' === payment.status && payment.client_secret && stripeState.stripe && stripeState.card) {
         stripeState.stripe.confirmCardPayment(payment.client_secret, { payment_method: { card: stripeState.card } })
           .then(function (result) {
+            setButtonLoading(false);
             if (result.error) {
               alert(result.error.message || 'Payment failed.');
               return;
             }
-            form.innerHTML = '<h2>Thanks!</h2><p>Order ' + orderNumber + ' received — payment confirmed.</p>';
+            renderConfirmation(res);
           });
         return;
       }
 
-      if ('awaiting_confirmation' === payment.status) {
-        form.innerHTML = '<h2>Thanks!</h2><p>Order ' + orderNumber + ' received.</p>' +
-          (payment.instructions ? '<p>' + String(payment.instructions).replace(/\n/g, '<br>') + '</p>' : '');
-        return;
-      }
-
-      form.innerHTML = '<h2>Thanks!</h2><p>Order ' + orderNumber + ' received.</p>';
+      renderConfirmation(res);
     }
 
     function refreshRates() {
@@ -367,13 +411,20 @@
       if (recaptchaEl && window.grecaptcha) {
         payload.recaptcha_token = window.grecaptcha.getResponse();
       }
+
+      setButtonLoading(true);
       api('checkout', { method: 'POST', body: JSON.stringify(payload) })
         .then(function (res) {
           if (res && res.order_number) {
-            handlePaymentResult(res.order_number, res.payment);
+            handlePaymentResult(res);
           } else {
-            alert((res && res.message) || 'Checkout failed.');
+            setButtonLoading(false);
+            alert((res && res.message) || 'Checkout failed. Please try again.');
           }
+        })
+        .catch(function () {
+          setButtonLoading(false);
+          alert('Something went wrong. Please check your connection and try again.');
         });
     });
   }

@@ -116,7 +116,16 @@ class Hal_Cartel_Order {
 
 		do_action( 'hal_cartel_order_created', $order_id, $data );
 
-		return array( 'order_id' => $order_id, 'order_number' => $order_number );
+		return array(
+			'order_id'     => $order_id,
+			'order_number' => $order_number,
+			'items'        => $cart['items'],
+			'subtotal'     => $cart['subtotal'],
+			'shipping'     => $shipping_cost,
+			'tax'          => $tax_total,
+			'total'        => round( $cart['subtotal'] + $shipping_cost + $tax_total, 2 ),
+			'currency'     => $cart['currency'],
+		);
 	}
 
 	/**

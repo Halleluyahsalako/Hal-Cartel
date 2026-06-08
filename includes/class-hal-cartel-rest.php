@@ -155,7 +155,11 @@ class Hal_Cartel_REST {
 
 		$payment = $gateway->initiate_payment( $result['order_id'] );
 
-		return rest_ensure_response( array_merge( $result, array( 'payment' => $payment ) ) );
+		return rest_ensure_response( array_merge( $result, array(
+			'payment'        => $payment,
+			'email'          => sanitize_email( $params['email'] ?? '' ),
+			'payment_method' => $gateway->title(),
+		) ) );
 	}
 
 	/** Verifies a checkout's reCAPTCHA v2 response against Google's siteverify endpoint — fails closed (rejects) on any network or verification problem. */
