@@ -36,7 +36,7 @@ if ( ! defined( 'ABSPATH' ) ) { exit; }
 					<div class="hal-cartel-my-orders__order-head">
 						<strong>#<?php echo esc_html( $order->order_number ); ?></strong>
 						<span class="hal-cartel-my-orders__date"><?php echo esc_html( mysql2date( get_option( 'date_format' ), $order->created_at ) ); ?></span>
-						<span class="hal-cartel-my-orders__status"><?php echo esc_html( Hal_Cartel_Order::statuses()[ $order->status ] ?? $order->status ); ?></span>
+						<span class="hal-cartel-badge hal-cartel-badge--<?php echo esc_attr( Hal_Cartel_Order::status_variant( $order->status ) ); ?>"><?php echo esc_html( Hal_Cartel_Order::statuses()[ $order->status ] ?? $order->status ); ?></span>
 						<span class="hal-cartel-my-orders__total"><?php echo esc_html( Hal_Cartel_Currency::format( $order->total, $order->currency ) ); ?></span>
 					</div>
 					<?php if ( 'completed' === $order->status ) :

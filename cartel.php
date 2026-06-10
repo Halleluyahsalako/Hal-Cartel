@@ -3,7 +3,7 @@
  * Plugin Name:       Cartel
  * Plugin URI:        https://cartel.example.com
  * Description:       Lightweight, security-conscious eCommerce for WordPress. A free alternative to WooCommerce + paid extensions. One-page checkout, instant Buy Now, stock & order management, shipping/mailing/captcha integrations, WooCommerce-compatible import/export.
- * Version:           0.2.0
+ * Version:           0.2.3
  * Requires at least: 6.2
  * Requires PHP:      7.4
  * Author:            Halleluyah
@@ -19,7 +19,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; // No direct access.
 }
 
-define( 'HAL_CARTEL_VERSION', '0.2.0' );
+define( 'HAL_CARTEL_VERSION', '0.2.3' );
 define( 'HAL_CARTEL_PLUGIN_FILE', __FILE__ );
 define( 'HAL_CARTEL_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
 define( 'HAL_CARTEL_PLUGIN_URL', plugin_dir_url( __FILE__ ) );

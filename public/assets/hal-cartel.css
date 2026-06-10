@@ -1,46 +1,355 @@
-/* Cartel — minimal public styles. Theme overrides welcome. */
-.hal-cartel-product{border:1px solid #111;padding:1rem;display:grid;gap:.5rem;font-family:inherit}
-.hal-cartel-product__title{margin:0;font-weight:800}
-.hal-cartel-product__price{font-variant-numeric:tabular-nums}
-.hal-cartel-add-to-cart,.hal-cartel-buy-now,.hal-cartel-buy-now-inline,.hal-cartel-place-order{
-  background:#111;color:#fff;border:0;padding:.65rem 1rem;cursor:pointer;font-weight:700;letter-spacing:.02em
+/* Cartel — storefront styles. Color system mirrors the admin's "Indigo & Slate" palette
+   for brand consistency. Theme overrides welcome — every value is a custom property. */
+:root {
+  --hal-cartel-accent:       #4F46E5;
+  --hal-cartel-accent-hover: #4338CA;
+  --hal-cartel-accent-soft:  #EEF2FF;
+  --hal-cartel-surface:      #FFFFFF;
+  --hal-cartel-backdrop:     #F8FAFC;
+  --hal-cartel-border:       #E2E8F0;
+  --hal-cartel-text:         #1E293B;
+  --hal-cartel-muted:        #64748B;
+  --hal-cartel-success:      #16A34A;
+  --hal-cartel-success-soft: #F0FDF4;
+  --hal-cartel-warning:      #D97706;
+  --hal-cartel-warning-soft: #FFFBEB;
+  --hal-cartel-danger:       #DC2626;
+  --hal-cartel-danger-soft:  #FEF2F2;
+  --hal-cartel-buy-now:      #F59E0B;
+  --hal-cartel-buy-now-text: #1E293B;
+  --hal-cartel-radius:       8px;
+  --hal-cartel-shadow:       0 1px 2px rgba(30, 41, 59, .06), 0 1px 3px rgba(30, 41, 59, .08);
 }
-.hal-cartel-buy-now,.hal-cartel-buy-now-inline{background:#facc15;color:#111}
-.hal-cartel-add-to-cart:disabled,.hal-cartel-buy-now:disabled{opacity:.5;cursor:not-allowed}
-.hal-cartel-external-link{display:inline-block;text-decoration:none;text-align:center}
-.hal-cartel-product__attributes{display:grid;gap:.5rem}
-.hal-cartel-product__attribute{display:grid;gap:.25rem;font-weight:600}
-.hal-cartel-product__attribute select{padding:.5rem;border:1px solid #111;font:inherit}
-.hal-cartel-product__availability{margin:0;font-weight:700}
-.hal-cartel-product__availability--out{color:#b91c1c}
-.hal-cartel-product__group-list{list-style:none;margin:0;padding:0;display:grid;gap:.5rem}
-.hal-cartel-product__group-item{display:flex;align-items:center;gap:.75rem;border:1px solid #111;padding:.65rem .75rem}
-.hal-cartel-product__group-name{flex:1;font-weight:700}
-.hal-cartel-product__group-price{font-variant-numeric:tabular-nums}
-.hal-cartel-checkout__grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1.5rem}
-@media (max-width:800px){.hal-cartel-checkout__grid{grid-template-columns:1fr}}
-.hal-cartel-checkout input,.hal-cartel-checkout select{display:block;width:100%;padding:.6rem;border:1px solid #111;margin:.25rem 0}
-.hal-cartel-checkout__shipping-rates{margin:.5rem 0 1rem}
-.hal-cartel-checkout__shipping-hint{opacity:.7;font-size:.9em}
-.hal-cartel-checkout__shipping-rate{display:flex;align-items:center;gap:.6rem;padding:.5rem;border:1px solid #111;margin:.25rem 0;cursor:pointer}
-.hal-cartel-checkout__shipping-rate span:first-of-type{flex:1}
-.hal-cartel-checkout__payment-method{display:flex;align-items:center;gap:.6rem;padding:.5rem;border:1px solid #111;margin:.25rem 0;cursor:pointer}
-.hal-cartel-checkout__payment-fields{padding:.25rem .5rem .75rem 2rem}
-.hal-cartel-checkout__payment-instructions{white-space:pre-line;opacity:.85}
-.hal-cartel-checkout__card-element{padding:.75rem;border:1px solid #111;background:#fff}
-.hal-cartel-checkout__opt-in{display:flex;align-items:center;gap:.5rem;margin:.75rem 0;font-weight:600;cursor:pointer}
-.hal-cartel-checkout__opt-in input{display:inline-block;width:auto;margin:0}
-.hal-cartel-confirmation{max-width:540px;margin:2rem auto;text-align:center;padding:0 1rem}
-.hal-cartel-confirmation__icon{width:64px;height:64px;border-radius:50%;background:#111;color:#fff;font-size:2rem;line-height:64px;margin:0 auto 1.25rem;display:flex;align-items:center;justify-content:center}
-.hal-cartel-confirmation__title{font-size:1.6rem;margin:0 0 .4rem}
-.hal-cartel-confirmation__number{color:#555;margin:0 0 .75rem;font-size:.95rem}
-.hal-cartel-confirmation table{text-align:left;font-size:.9rem}
-.hal-cartel-order-lookup{border:1px solid #111;padding:1rem;display:grid;gap:.5rem;max-width:28rem;margin-bottom:1.5rem}
-.hal-cartel-order-lookup input{display:block;width:100%;padding:.6rem;border:1px solid #111;margin:.25rem 0}
-.hal-cartel-my-orders__error{color:#b91c1c;font-weight:700}
-.hal-cartel-my-orders__list{list-style:none;margin:0;padding:0;display:grid;gap:.75rem}
-.hal-cartel-my-orders__order{border:1px solid #111;padding:.85rem 1rem}
-.hal-cartel-my-orders__order-head{display:flex;flex-wrap:wrap;align-items:center;gap:1rem;font-weight:700}
-.hal-cartel-my-orders__date,.hal-cartel-my-orders__status{font-weight:400;opacity:.8}
-.hal-cartel-my-orders__total{margin-left:auto;font-variant-numeric:tabular-nums}
-.hal-cartel-my-orders__downloads{list-style:none;margin:.6rem 0 0;padding:0;display:grid;gap:.25rem}
+
+/* Product cards */
+.hal-cartel-product {
+  border: 1px solid var(--hal-cartel-border);
+  border-radius: var(--hal-cartel-radius);
+  box-shadow: var(--hal-cartel-shadow);
+  background: var(--hal-cartel-surface);
+  color: var(--hal-cartel-text);
+  padding: 1.25rem;
+  display: grid;
+  gap: .6rem;
+  font-family: inherit;
+  transition: box-shadow .15s ease, transform .15s ease;
+}
+.hal-cartel-product:hover { box-shadow: 0 4px 12px rgba(30, 41, 59, .10); transform: translateY(-2px); }
+.hal-cartel-product__title { margin: 0; font-weight: 700; font-size: 1.05rem; }
+.hal-cartel-product__price { font-variant-numeric: tabular-nums; font-weight: 600; }
+
+/* Buttons — "Add to cart" is the primary action; "Buy now" is a high-contrast secondary CTA.
+   Scoped to their containing component (.hal-cartel-product / .hal-cartel-buy-now-wrap /
+   .hal-cartel-checkout / .hal-cartel-order-lookup) for (0,2,0) specificity: host themes
+   commonly reset `[type="button"]`/`[type="submit"]`/`button` at (0,1,0)/(0,0,1), which
+   ties or beats a bare class selector and wins on source order (themes load after this
+   stylesheet). The bare `.hal-cartel-buy-now`/`.hal-cartel-buy-now-inline` selectors remain
+   for the standalone external-product link rendered outside any wrapper. */
+.hal-cartel-product .hal-cartel-add-to-cart,
+.hal-cartel-product .hal-cartel-buy-now,
+.hal-cartel-product .hal-cartel-buy-now-inline,
+.hal-cartel-buy-now-wrap .hal-cartel-buy-now-inline,
+.hal-cartel-buy-now,
+.hal-cartel-buy-now-inline,
+.hal-cartel-checkout .hal-cartel-place-order,
+.hal-cartel-order-lookup .hal-cartel-place-order {
+  border: 0;
+  border-radius: var(--hal-cartel-radius);
+  padding: .7rem 1.1rem;
+  font-weight: 600;
+  font-size: .95rem;
+  letter-spacing: .01em;
+  cursor: pointer;
+  transition: background-color .15s ease, filter .15s ease;
+}
+.hal-cartel-product .hal-cartel-add-to-cart,
+.hal-cartel-checkout .hal-cartel-place-order,
+.hal-cartel-order-lookup .hal-cartel-place-order { background: var(--hal-cartel-accent); color: #fff; }
+.hal-cartel-product .hal-cartel-add-to-cart:hover,
+.hal-cartel-checkout .hal-cartel-place-order:hover,
+.hal-cartel-order-lookup .hal-cartel-place-order:hover { background: var(--hal-cartel-accent-hover); }
+.hal-cartel-product .hal-cartel-buy-now,
+.hal-cartel-product .hal-cartel-buy-now-inline,
+.hal-cartel-buy-now-wrap .hal-cartel-buy-now-inline,
+.hal-cartel-buy-now,
+.hal-cartel-buy-now-inline { background: var(--hal-cartel-buy-now); color: var(--hal-cartel-buy-now-text); }
+.hal-cartel-product .hal-cartel-buy-now:hover,
+.hal-cartel-product .hal-cartel-buy-now-inline:hover,
+.hal-cartel-buy-now-wrap .hal-cartel-buy-now-inline:hover,
+.hal-cartel-buy-now:hover,
+.hal-cartel-buy-now-inline:hover { filter: brightness(.95); }
+.hal-cartel-product .hal-cartel-add-to-cart:disabled,
+.hal-cartel-product .hal-cartel-buy-now:disabled,
+.hal-cartel-checkout .hal-cartel-place-order:disabled,
+.hal-cartel-order-lookup .hal-cartel-place-order:disabled { opacity: .5; cursor: not-allowed; filter: none; }
+.hal-cartel-external-link { display: inline-block; text-decoration: none; text-align: center; }
+
+/* Variable-product attribute pickers + availability */
+.hal-cartel-product__attributes { display: grid; gap: .6rem; }
+.hal-cartel-product__attribute { display: grid; gap: .3rem; font-weight: 600; font-size: .9rem; }
+.hal-cartel-product__attribute select {
+  padding: .55rem .6rem;
+  border: 1px solid var(--hal-cartel-border);
+  border-radius: var(--hal-cartel-radius);
+  font: inherit;
+  color: var(--hal-cartel-text);
+  background: var(--hal-cartel-surface);
+}
+.hal-cartel-product__attribute select:focus {
+  outline: none;
+  border-color: var(--hal-cartel-accent);
+  box-shadow: 0 0 0 3px var(--hal-cartel-accent-soft);
+}
+.hal-cartel-product__availability { margin: 0; font-weight: 600; font-size: .9rem; color: var(--hal-cartel-success); }
+.hal-cartel-product__availability--out { color: var(--hal-cartel-danger); }
+
+/* Grouped products */
+.hal-cartel-product__group-list { list-style: none; margin: 0; padding: 0; display: grid; gap: .6rem; }
+.hal-cartel-product__group-item {
+  display: flex;
+  align-items: center;
+  gap: .75rem;
+  border: 1px solid var(--hal-cartel-border);
+  border-radius: var(--hal-cartel-radius);
+  padding: .7rem .85rem;
+  background: var(--hal-cartel-surface);
+}
+.hal-cartel-product__group-name { flex: 1; font-weight: 600; }
+.hal-cartel-product__group-price { font-variant-numeric: tabular-nums; color: var(--hal-cartel-muted); }
+
+/* Checkout layout — each section is a card, mirroring the admin's surfaced-card design.
+   Uses a container query (not a viewport media query) because host themes often
+   constrain .hal-cartel-checkout to a narrow content column regardless of viewport width. */
+.hal-cartel-checkout {
+  color: var(--hal-cartel-text);
+  container-type: inline-size;
+  container-name: hal-cartel-checkout;
+}
+.hal-cartel-checkout__grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1.5rem; align-items: start; }
+@container hal-cartel-checkout (max-width: 700px) {
+  .hal-cartel-checkout__grid { grid-template-columns: 1fr 1fr; }
+  .hal-cartel-checkout__summary { grid-column: 1 / -1; }
+}
+@container hal-cartel-checkout (max-width: 420px) {
+  .hal-cartel-checkout__grid { grid-template-columns: 1fr; }
+  .hal-cartel-checkout__summary { grid-column: auto; }
+}
+
+.hal-cartel-checkout__contact,
+.hal-cartel-checkout__shipping,
+.hal-cartel-checkout__payment,
+.hal-cartel-checkout__summary {
+  background: var(--hal-cartel-surface);
+  border: 1px solid var(--hal-cartel-border);
+  border-radius: var(--hal-cartel-radius);
+  box-shadow: var(--hal-cartel-shadow);
+  padding: 1.25rem;
+}
+.hal-cartel-checkout__grid h2 { margin: 0 0 1rem; font-size: 1.1rem; }
+.hal-cartel-checkout__grid h3 { margin: 1rem 0 .5rem; font-size: .95rem; }
+
+.hal-cartel-checkout__contact label,
+.hal-cartel-order-lookup label {
+  display: block;
+  font-weight: 600;
+  font-size: .9rem;
+  margin-bottom: .5rem;
+}
+.hal-cartel-checkout__contact input,
+.hal-cartel-checkout__shipping input,
+.hal-cartel-checkout__shipping select,
+.hal-cartel-order-lookup input {
+  display: block;
+  width: 100%;
+  margin-top: .3rem;
+  padding: .65rem .75rem;
+  border: 1px solid var(--hal-cartel-border);
+  border-radius: var(--hal-cartel-radius);
+  font: inherit;
+  color: var(--hal-cartel-text);
+  background: var(--hal-cartel-surface);
+  transition: border-color .15s ease, box-shadow .15s ease;
+}
+.hal-cartel-checkout__shipping input,
+.hal-cartel-checkout__shipping select { margin-bottom: .6rem; }
+.hal-cartel-checkout__contact input:focus,
+.hal-cartel-checkout__shipping input:focus,
+.hal-cartel-checkout__shipping select:focus,
+.hal-cartel-order-lookup input:focus {
+  outline: none;
+  border-color: var(--hal-cartel-accent);
+  box-shadow: 0 0 0 3px var(--hal-cartel-accent-soft);
+}
+
+/* Shipping rates + payment methods — selectable rows that highlight when checked */
+.hal-cartel-checkout__shipping-hint { color: var(--hal-cartel-muted); font-size: .85rem; }
+.hal-cartel-checkout__shipping-error { color: var(--hal-cartel-danger); font-weight: 600; font-size: .85rem; margin-top: .5rem; }
+
+.hal-cartel-checkout__shipping-rate,
+.hal-cartel-checkout__payment-method {
+  display: flex;
+  align-items: center;
+  gap: .65rem;
+  padding: .75rem .9rem;
+  margin: .5rem 0;
+  border: 1px solid var(--hal-cartel-border);
+  border-radius: var(--hal-cartel-radius);
+  cursor: pointer;
+  transition: border-color .15s ease, background-color .15s ease;
+}
+.hal-cartel-checkout__shipping-rate:hover,
+.hal-cartel-checkout__payment-method:hover { border-color: var(--hal-cartel-accent); }
+.hal-cartel-checkout__shipping-rate:has(input:checked),
+.hal-cartel-checkout__payment-method:has(input:checked) {
+  border-color: var(--hal-cartel-accent);
+  background: var(--hal-cartel-accent-soft);
+}
+.hal-cartel-checkout__shipping-rate input,
+.hal-cartel-checkout__payment-method input {
+  width: auto;
+  margin: 0;
+  accent-color: var(--hal-cartel-accent);
+}
+.hal-cartel-checkout__shipping-rate span:first-of-type { flex: 1; font-weight: 600; }
+
+.hal-cartel-checkout__payment-fields { padding: .25rem .5rem 1rem 2.35rem; }
+.hal-cartel-checkout__payment-instructions {
+  white-space: pre-line;
+  font-size: .9rem;
+  color: var(--hal-cartel-muted);
+  background: var(--hal-cartel-backdrop);
+  border: 1px solid var(--hal-cartel-border);
+  border-radius: var(--hal-cartel-radius);
+  padding: .75rem .9rem;
+  margin: 0;
+}
+.hal-cartel-checkout__card-element {
+  padding: .85rem;
+  border: 1px solid var(--hal-cartel-border);
+  border-radius: var(--hal-cartel-radius);
+  background: var(--hal-cartel-surface);
+  transition: border-color .15s ease, box-shadow .15s ease;
+}
+.hal-cartel-checkout__card-element--focus {
+  border-color: var(--hal-cartel-accent);
+  box-shadow: 0 0 0 3px var(--hal-cartel-accent-soft);
+}
+
+/* Order summary */
+[data-hal-cartel-cart-summary] ul { list-style: none; margin: 0 0 .75rem; padding: 0; display: grid; gap: .5rem; font-size: .9rem; }
+[data-hal-cartel-cart-summary] li { padding-bottom: .5rem; border-bottom: 1px solid var(--hal-cartel-border); }
+[data-hal-cartel-cart-summary] p { margin: .5rem 0 0; font-size: 1.05rem; }
+
+.hal-cartel-checkout__opt-in {
+  display: flex;
+  align-items: center;
+  gap: .5rem;
+  margin: 1rem 0 0;
+  font-weight: 500;
+  font-size: .9rem;
+  cursor: pointer;
+}
+.hal-cartel-checkout__opt-in input { width: auto; margin: 0; accent-color: var(--hal-cartel-accent); }
+
+.hal-cartel-checkout__summary .hal-cartel-place-order { width: 100%; margin-top: 1rem; padding: .85rem 1rem; font-size: 1rem; }
+
+/* Order confirmation screen */
+.hal-cartel-confirmation {
+  max-width: 560px;
+  margin: 2.5rem auto;
+  text-align: center;
+  padding: 2rem 1.5rem;
+  background: var(--hal-cartel-surface);
+  border: 1px solid var(--hal-cartel-border);
+  border-radius: var(--hal-cartel-radius);
+  box-shadow: var(--hal-cartel-shadow);
+  color: var(--hal-cartel-text);
+}
+.hal-cartel-confirmation__icon {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background: var(--hal-cartel-success-soft);
+  color: var(--hal-cartel-success);
+  font-size: 1.8rem;
+  line-height: 64px;
+  margin: 0 auto 1.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.hal-cartel-confirmation__title { font-size: 1.5rem; margin: 0 0 .4rem; }
+.hal-cartel-confirmation__number { color: var(--hal-cartel-muted); margin: 0 0 .75rem; font-size: .95rem; }
+.hal-cartel-confirmation__email-note { color: var(--hal-cartel-muted); font-size: .9rem; margin: 0 0 .5rem; }
+.hal-cartel-confirmation__table { width: 100%; border-collapse: collapse; margin-top: 1.25rem; text-align: left; font-size: .9rem; }
+.hal-cartel-confirmation__item-row td { padding: .5rem 0; border-bottom: 1px solid var(--hal-cartel-border); }
+.hal-cartel-confirmation__amount { text-align: right; font-variant-numeric: tabular-nums; }
+.hal-cartel-confirmation__totals-row td { padding: .35rem 0; color: var(--hal-cartel-muted); }
+.hal-cartel-confirmation__totals-row--total td { padding-top: .6rem; font-weight: 700; color: var(--hal-cartel-text); font-size: 1rem; }
+.hal-cartel-confirmation__instructions {
+  margin-top: 1.25rem;
+  padding: 1rem;
+  text-align: left;
+  background: var(--hal-cartel-backdrop);
+  border: 1px solid var(--hal-cartel-border);
+  border-left: 4px solid var(--hal-cartel-accent);
+  border-radius: var(--hal-cartel-radius);
+}
+.hal-cartel-confirmation__instructions-title { margin: 0 0 .35rem; font-weight: 600; }
+.hal-cartel-confirmation__instructions-body { margin: 0; white-space: pre-line; color: var(--hal-cartel-muted); }
+
+/* Status badges — shared with the admin order views */
+.hal-cartel-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: .3em;
+  padding: .15em .65em;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1.8;
+  white-space: nowrap;
+}
+.hal-cartel-badge--neutral { background: var(--hal-cartel-accent-soft); color: var(--hal-cartel-accent-hover); }
+.hal-cartel-badge--success { background: var(--hal-cartel-success-soft); color: var(--hal-cartel-success); }
+.hal-cartel-badge--warning { background: var(--hal-cartel-warning-soft); color: var(--hal-cartel-warning); }
+.hal-cartel-badge--danger  { background: var(--hal-cartel-danger-soft);  color: var(--hal-cartel-danger); }
+
+/* Order lookup + history ([hal_cartel_my_orders]) */
+.hal-cartel-order-lookup {
+  background: var(--hal-cartel-surface);
+  border: 1px solid var(--hal-cartel-border);
+  border-radius: var(--hal-cartel-radius);
+  box-shadow: var(--hal-cartel-shadow);
+  padding: 1.25rem;
+  display: grid;
+  gap: .5rem;
+  max-width: 28rem;
+  margin-bottom: 1.5rem;
+}
+.hal-cartel-order-lookup h2 { margin: 0 0 .25rem; font-size: 1.1rem; }
+.hal-cartel-order-lookup p { margin: 0 0 .5rem; color: var(--hal-cartel-muted); font-size: .9rem; }
+.hal-cartel-order-lookup .hal-cartel-place-order { margin-top: .25rem; }
+.hal-cartel-my-orders__error { color: var(--hal-cartel-danger); font-weight: 600; font-size: .9rem; margin: .25rem 0 0; }
+
+.hal-cartel-my-orders__list { list-style: none; margin: 0; padding: 0; display: grid; gap: .85rem; }
+.hal-cartel-my-orders__order {
+  background: var(--hal-cartel-surface);
+  border: 1px solid var(--hal-cartel-border);
+  border-radius: var(--hal-cartel-radius);
+  box-shadow: var(--hal-cartel-shadow);
+  padding: 1rem 1.15rem;
+}
+.hal-cartel-my-orders__order-head { display: flex; flex-wrap: wrap; align-items: center; gap: .85rem; font-weight: 700; }
+.hal-cartel-my-orders__date { font-weight: 400; color: var(--hal-cartel-muted); font-size: .9rem; }
+.hal-cartel-my-orders__total { margin-left: auto; font-variant-numeric: tabular-nums; font-weight: 700; }
+.hal-cartel-my-orders__downloads {
+  list-style: none;
+  margin: .75rem 0 0;
+  padding-top: .75rem;
+  border-top: 1px solid var(--hal-cartel-border);
+  display: grid;
+  gap: .35rem;
+}
+.hal-cartel-my-orders__downloads a { color: var(--hal-cartel-accent); font-weight: 600; text-decoration: none; }
+.hal-cartel-my-orders__downloads a:hover { text-decoration: underline; }

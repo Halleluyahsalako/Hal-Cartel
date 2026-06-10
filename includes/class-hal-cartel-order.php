@@ -25,6 +25,20 @@ class Hal_Cartel_Order {
 		);
 	}
 
+	/** Maps a status to the badge variant used to colour it consistently in admin order views and [hal_cartel_my_orders]. */
+	public static function status_variant( $status ): string {
+		$variants = array(
+			'pending-payment' => 'warning',
+			'on-hold'         => 'warning',
+			'processing'      => 'neutral',
+			'completed'       => 'success',
+			'cancelled'       => 'danger',
+			'refunded'        => 'danger',
+			'failed'          => 'danger',
+		);
+		return $variants[ $status ] ?? 'neutral';
+	}
+
 	/**
 	 * Creates the order row in `pending-payment`, storing the chosen gateway's id —
 	 * never raw client-sent payment strings (mirrors the "never trust the client"
@@ -82,7 +96,8 @@ class Hal_Cartel_Order {
 			'tax'          => $tax_total,
 			'total'        => $cart['subtotal'] + $shipping_cost + $tax_total,
 			'currency'     => $cart['currency'],
-			'billing'      => wp_json_encode( $data['billing'] ?? array() ),
+			// Checkout collects a single address; treat it as billing too unless a distinct billing address was supplied.
+			'billing'      => wp_json_encode( $data['billing'] ?? $data['shipping'] ?? array() ),
 			'shipping_address' => wp_json_encode( $data['shipping'] ?? array() ),
 			'gateway_id'   => $gateway->id(),
 			'payment_method' => $gateway->title(),

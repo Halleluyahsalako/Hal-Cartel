@@ -153,7 +153,6 @@
       if (!shippingErrorEl) {
         shippingErrorEl = document.createElement('p');
         shippingErrorEl.className = 'hal-cartel-checkout__shipping-error';
-        shippingErrorEl.style.cssText = 'color:#c0392b;font-weight:600;margin-top:8px';
       }
       shippingErrorEl.textContent = msg;
       ratesEl.appendChild(shippingErrorEl);
@@ -235,6 +234,8 @@
               var stripe = window.Stripe(field.publishable_key);
               var card   = stripe.elements().create('card');
               card.mount('#hal-cartel-stripe-card-element');
+              card.on('focus', function () { mount.classList.add('hal-cartel-checkout__card-element--focus'); });
+              card.on('blur', function () { mount.classList.remove('hal-cartel-checkout__card-element--focus'); });
               stripeState.stripe = stripe;
               stripeState.card   = card;
             });
@@ -299,27 +300,27 @@
       var fmt     = function(n) { return formatMoney(n, { symbol: res.currency || '', position: 'before', decimals: 2 }); };
 
       var itemRows = items.map(function(i) {
-        return '<tr>' +
-          '<td style="padding:6px 0;border-bottom:1px solid #eee;">' + String(i.quantity) + ' &times; ' + String(i.name) + '</td>' +
-          '<td style="padding:6px 0;border-bottom:1px solid #eee;text-align:right;">' + fmt(i.total) + '</td>' +
+        return '<tr class="hal-cartel-confirmation__item-row">' +
+          '<td>' + String(i.quantity) + ' &times; ' + String(i.name) + '</td>' +
+          '<td class="hal-cartel-confirmation__amount">' + fmt(i.total) + '</td>' +
         '</tr>';
       }).join('');
 
       var totalsRows =
-        '<tr><td style="padding:4px 0;color:#666;">Subtotal</td><td style="padding:4px 0;text-align:right;">' + fmt(res.subtotal || 0) + '</td></tr>' +
-        (res.shipping > 0 ? '<tr><td style="padding:4px 0;color:#666;">Shipping</td><td style="padding:4px 0;text-align:right;">' + fmt(res.shipping) + '</td></tr>' : '') +
-        (res.tax > 0      ? '<tr><td style="padding:4px 0;color:#666;">Tax</td><td style="padding:4px 0;text-align:right;">' + fmt(res.tax) + '</td></tr>' : '') +
-        '<tr><td style="padding:8px 0 0;font-weight:700;">Total</td><td style="padding:8px 0 0;text-align:right;font-weight:700;">' + fmt(res.total || 0) + '</td></tr>';
+        '<tr class="hal-cartel-confirmation__totals-row"><td>Subtotal</td><td class="hal-cartel-confirmation__amount">' + fmt(res.subtotal || 0) + '</td></tr>' +
+        (res.shipping > 0 ? '<tr class="hal-cartel-confirmation__totals-row"><td>Shipping</td><td class="hal-cartel-confirmation__amount">' + fmt(res.shipping) + '</td></tr>' : '') +
+        (res.tax > 0      ? '<tr class="hal-cartel-confirmation__totals-row"><td>Tax</td><td class="hal-cartel-confirmation__amount">' + fmt(res.tax) + '</td></tr>' : '') +
+        '<tr class="hal-cartel-confirmation__totals-row hal-cartel-confirmation__totals-row--total"><td>Total</td><td class="hal-cartel-confirmation__amount">' + fmt(res.total || 0) + '</td></tr>';
 
       var instructionsHtml = (payment.instructions)
-        ? '<div style="margin-top:20px;padding:16px;background:#f8f9fa;border-radius:6px;border-left:4px solid #1a1a2e;">' +
-            '<p style="margin:0 0 6px;font-weight:600;">Payment instructions</p>' +
-            '<p style="margin:0;white-space:pre-line;">' + String(payment.instructions).replace(/</g,'&lt;') + '</p>' +
+        ? '<div class="hal-cartel-confirmation__instructions">' +
+            '<p class="hal-cartel-confirmation__instructions-title">Payment instructions</p>' +
+            '<p class="hal-cartel-confirmation__instructions-body">' + String(payment.instructions).replace(/</g,'&lt;') + '</p>' +
           '</div>'
         : '';
 
       var emailNote = res.email
-        ? '<p style="color:#666;font-size:14px;">A confirmation email has been sent to <strong>' + String(res.email).replace(/</g,'&lt;') + '</strong>.</p>'
+        ? '<p class="hal-cartel-confirmation__email-note">A confirmation email has been sent to <strong>' + String(res.email).replace(/</g,'&lt;') + '</strong>.</p>'
         : '';
 
       form.innerHTML =
@@ -328,7 +329,7 @@
           '<h2 class="hal-cartel-confirmation__title">' + label('orderReceivedLabel', 'Order received!') + '</h2>' +
           '<p class="hal-cartel-confirmation__number">Order <strong>#' + String(res.order_number) + '</strong> &mdash; ' + String(res.payment_method || '') + '</p>' +
           emailNote +
-          '<table style="width:100%;border-collapse:collapse;margin-top:20px;">' + itemRows + totalsRows + '</table>' +
+          '<table class="hal-cartel-confirmation__table">' + itemRows + totalsRows + '</table>' +
           instructionsHtml +
         '</div>';
     }

@@ -109,16 +109,7 @@ JS;
 
 	/** Maps an order status to the badge variant used to colour it consistently across the admin. */
 	protected static function order_status_variant( $status ): string {
-		$variants = array(
-			'pending-payment' => 'warning',
-			'on-hold'         => 'warning',
-			'processing'      => 'neutral',
-			'completed'       => 'success',
-			'cancelled'       => 'danger',
-			'refunded'        => 'danger',
-			'failed'          => 'danger',
-		);
-		return $variants[ $status ] ?? 'neutral';
+		return Hal_Cartel_Order::status_variant( $status );
 	}
 
 	protected static function order_status_label( $status ): string {

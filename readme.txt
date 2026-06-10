@@ -4,7 +4,7 @@ Tags: ecommerce, woocommerce alternative, shop, checkout, one-page checkout, buy
 Requires at least: 6.2
 Tested up to: 6.6
 Requires PHP: 7.4
-Stable tag: 0.2.0
+Stable tag: 0.2.3
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -20,6 +20,13 @@ Cartel is a fast, no-bloat commerce plugin: one-page checkout, instant Buy Now, 
 4. Visit Cartel → Settings to configure currency, shipping zones, emails, captcha, and mailing-list integrations.
 
 == Changelog ==
+= 0.2.3 =
+* Storefront UI: fixed the checkout layout squeezing into 184px columns under themes that constrain the checkout to a narrow content area, by switching the 3-column grid to a container query keyed to the checkout's own rendered width. Fixed "Add to cart", "Buy now", and "Place order" buttons rendering with the host theme's default crimson/outline button style instead of the design system's solid indigo/amber, by scoping those button selectors to their containing component for higher specificity than the theme's `[type="button"]`/`[type="submit"]` resets.
+* Orders: the admin order-detail "Billing" section now falls back to the checkout's shipping address when no separate billing address was collected, instead of always showing "—".
+
+= 0.2.1 =
+* Storefront UI: redesigned `public/assets/hal-cartel.css` with a card-based layout and a colour system aligned with the admin's design language — product cards, buttons, checkout sections, shipping/payment selection rows, the Stripe card field, the order-confirmation screen, and order-history all restyled. Order-status badges (`[hal_cartel_my_orders]`) now share the same badge styling as the admin order list.
+
 = 0.2.0 =
 * Payments: pluggable gateway architecture (`Hal_Cartel_Gateway`/`Hal_Cartel_Gateways`), a Manual/Offline gateway active by default, and a Stripe gateway with PaymentIntents, signed + idempotent webhook handling, and an abandoned-`pending-payment`-order cleanup cron that restocks and fails stale orders.
 * Orders: full status workflow (pending payment → on hold/processing → completed/cancelled/refunded/failed) with an admin order-detail view and status-change action.
